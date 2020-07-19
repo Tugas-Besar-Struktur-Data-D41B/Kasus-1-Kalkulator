@@ -194,7 +194,7 @@ int main(){
     scanf("%d", &pilihan);
     switch (pilihan){
     	case 1:
-    		system("Cls");
+    		system("cls");
     		printf("Keterangan : Angka negatif ditengah menggunakan tanda kurung\n\n");
     		printf("Masukan String = ");
     		scanf(" %s",input);
