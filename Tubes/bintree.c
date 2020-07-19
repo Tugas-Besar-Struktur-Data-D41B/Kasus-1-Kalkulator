@@ -282,6 +282,7 @@ int Priority(char a, char b){
 char *Convert(char *infix){
     int i, index=0, size;
     char *postfix, tmpchar;
+    boolean negatif=false;
     stack tmp;
     
     createStack(&tmp);
@@ -303,13 +304,35 @@ char *Convert(char *infix){
                 postfix[index]=infix[i];
                 index++;
                 break;
-            case '+':
             case '-':
+                postfix[index]=' ';
+                index++;            
+				if (infix[i-1]=='('){
+					negatif=true;
+				}else if (i==0){
+					negatif=true;
+				}
+				else{
+	                if(isEmpty(tmp)){
+	                    pushStack(&tmp,infix[i]);
+	                }else if(!Priority(Info(Top(tmp)),infix[i])){
+	                    pushStack(&tmp,infix[i]);
+	                }else{
+	                    while(!isEmpty(tmp)&&Priority(Info(Top(tmp)),infix[i])){
+	                        popStack(&tmp,&tmpchar);
+	                        postfix[index]=tmpchar;
+	                        index++;
+	                    }                
+	                    pushStack(&tmp,infix[i]);
+	                }
+				}
+				break;
+            case '+':
             case '*':
             case '/':
             case '^':
                 postfix[index]=' ';
-                index++;            
+                index++;
                 if(isEmpty(tmp)){
                     pushStack(&tmp,infix[i]);
                 }else if(!Priority(Info(Top(tmp)),infix[i])){
