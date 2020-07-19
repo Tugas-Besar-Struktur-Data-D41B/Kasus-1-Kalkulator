@@ -199,27 +199,9 @@ int main(){
     		printf("Masukan String = ");
     		scanf(" %s",input);
 		    tpostfix=Convert(&input);
-		    //cari input negatif
 		    int size=strlen(input);
-		    for(i=0; i<size; i++){
-		    	if (i==0 && input[0]=='-'){
-		    		negatif[j]=input[i+1];
-		    		j++;
-				}else if (input[i]=='-'&&input[i-1]=='('){
-					negatif[j]=input[i+1];
-					j++;
-				}
-			}
-			int jumlahN=strlen(negatif);
-			for (i=0;i<jumlahN;i++){
-				AngkaNegatif[i]=toInt(negatif[i]);
-			}
-			//selesai cari input negatif
-			
-			printf("\n");
-			printf("\n");
-			j=0,k=0;
 			//cari input puluhan
+			j=0,k=0;
 			for(i=0;i<10;i++){
 				AngkaPuluhan[i]=0;
 			}
@@ -238,7 +220,28 @@ int main(){
 				}
 			}
 		
-			//selesai cari input puluhan
+			//selesai cari input puluhan		    
+			//cari input negatif
+			j=0,k=0;
+		    for(i=0; i<size; i++){
+		    	if (i==0 && input[0]=='-'){
+		    		negatif[j]=input[i+1];
+		    		j++;
+				}else if (input[i]=='-'&&input[i-1]=='('){
+					negatif[j]=input[i+1];
+					j++;
+				}
+			}
+			int jumlahN=strlen(negatif);
+			for (i=0;i<jumlahN;i++){
+				AngkaNegatif[i]=toInt(negatif[i]);
+			}
+			//selesai cari input negatif
+			
+			printf("\n");
+			printf("\n");
+			
+
 			ex = constructTree(tpostfix);
 			hasil = eval(ex,AngkaNegatif,jumlahN,AngkaPuluhan);
 			printf("%.2f", hasil);

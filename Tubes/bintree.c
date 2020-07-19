@@ -321,8 +321,6 @@ char *Convert(char *infix){
 						postfix[index]='a';
 						index++;
 						puluhan=false;
-					}else{
-						
 					}
 				}else{
 	                postfix[index]=infix[i];
