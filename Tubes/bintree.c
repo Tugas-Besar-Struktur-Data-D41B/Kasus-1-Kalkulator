@@ -279,10 +279,17 @@ int Priority(char a, char b){
     return (Prior(a)>=Prior(b));
 }
 
+boolean isAngka(char c){
+	if (c == '0' || c == '1' || c == '2'|| c == '3'|| c == '4'|| c == '5'|| c == '6'|| c == '7'|| c == '8'|| c == '9'){
+		return true;
+	}
+	return false;
+}
+
 char *Convert(char *infix){
     int i, index=0, size;
     char *postfix, tmpchar;
-    boolean negatif=false;
+    boolean negatif=false,puluhan=false;
     stack tmp;
     
     createStack(&tmp);
@@ -301,8 +308,16 @@ char *Convert(char *infix){
             case '7':
             case '8':
             case '9':
-                postfix[index]=infix[i];
-                index++;
+				if (isAngka(infix[i-1]) || isAngka(infix[i+1]) ){
+            		if(!isOperator(infix[i])){
+            			postfix[index]='a';
+            			puluhan=true;
+						index++;
+					}
+				}else{
+	                postfix[index]=infix[i];
+	                index++;					
+				}
                 break;
             case '-':
                 postfix[index]=' ';

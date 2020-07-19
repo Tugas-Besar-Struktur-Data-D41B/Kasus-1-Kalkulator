@@ -118,20 +118,32 @@ int toInt(char X){
 	return ((int)X-48);
 }
 
-float eval(BinTree P, int arraynegatif[], int size)  {
+float eval(BinTree P, int arraynegatif[], int size, int arraypuluhan[])  {
 	int j,i;
-	float hasil=1.0,temp,temp2;
+	float hasil=1.0,temp,temp2,puluhan;
 
     if (P==Nil)  
         return 0;  
-   
-    if (Left(P)==Nil && Right(P)==Nil)
-        return toInt(Info(P));  
-
+    
+    if (Left(P)==Nil && Right(P)==Nil){
+    	if(Info(P)=='a'){
+    		for(j=0;j<size;j++){
+				if(arraypuluhan[j]!=0){
+					puluhan = arraypuluhan[j];
+					arraypuluhan[j] = 0;
+					return puluhan;
+				}
+			}
+		}else{
+			return toInt(Info(P));
+		}
+ 	}
+          
 	 	
-    float left = eval(Left(P), arraynegatif, size);  
-    float right = eval(Right(P), arraynegatif, size);  
-
+    float left = eval(Left(P), arraynegatif, size, arraypuluhan);  
+    float right = eval(Right(P), arraynegatif, size, arraypuluhan);  
+	
+	//Mengubah menjadi negatif
     temp = left;
     temp2 = right;
 	for(j=0;j<size;j++){
@@ -142,7 +154,8 @@ float eval(BinTree P, int arraynegatif[], int size)  {
 			right=temp2*(-1);
 			arraynegatif[j]=0;
 		}
-	}	
+	}
+	//Selesai mengubah menjadi negatif	
 
     if (Info(P)=='+')  
         return left+right;  
@@ -165,12 +178,12 @@ float eval(BinTree P, int arraynegatif[], int size)  {
   
 
 int main(){
-	char negatif[20];
-	int AngkaNegatif[20];
+	char negatif[20],puluhan[10];
+	int AngkaNegatif[20],AngkaPuluhan[10];
 	char input[50];
     char *tpostfix;
     float hasil;
-    int i, j=0, num, pilihan;
+    int i, j=0, num, pilihan,k;
     BinTree ex;
     
     printf("KALKULATOR\n");
@@ -182,34 +195,54 @@ int main(){
     switch (pilihan){
     	case 1:
     		system("Cls");
+    		printf("Keterangan : Angka negatif ditengah menggunakan tanda kurung\n\n");
+    		printf("Masukan String = ");
     		scanf(" %s",input);
-    		tpostfix=Convert(&input);
-    		int size=strlen(input);
-    		for(i=0; i<size; i++){
-    			if (i==0 && input[0]=='-'){
-    				negatif[j]=input[i+1];
-    				j++;
+		    tpostfix=Convert(&input);
+		    //cari input negatif
+		    int size=strlen(input);
+		    for(i=0; i<size; i++){
+		    	if (i==0 && input[0]=='-'){
+		    		negatif[j]=input[i+1];
+		    		j++;
 				}else if (input[i]=='-'&&input[i-1]=='('){
 					negatif[j]=input[i+1];
 					j++;
 				}
 			}
-			int oke=strlen(negatif);
-    		for(i=0; i<oke; i++){
-    			printf ("Negatif %d = %c\n", i+1,negatif[i]);
-			}
-			printf("\n\n%d\n\n",oke);
-			for (i=0;i<oke;i++){
+			int jumlahN=strlen(negatif);
+			for (i=0;i<jumlahN;i++){
 				AngkaNegatif[i]=toInt(negatif[i]);
 			}
-			printf("%s", tpostfix);
+			//selesai cari input negatif
+			
 			printf("\n");
 			printf("\n");
-	
+			j=0,k=0;
+			//cari input puluhan
+			for(i=0;i<10;i++){
+				AngkaPuluhan[i]=0;
+			}
+			for(i=0; i<size; i++){
+				if (isAngka(input[i+1])|| isAngka(input[i-1])){
+			    	if(!isOperator(input[i])){
+			    		puluhan[j]=input[i];
+			    		j++;
+			    		puluhan[j]='\0';
+			    		if(isOperator(input[i+1]) || i+1==size){
+			    			j=0;
+			    			AngkaPuluhan[k] = atoi(puluhan);
+			    			k++;
+						}
+						
+					}
+				}
+			}
+		
+			//selesai cari input puluhan
 			ex = constructTree(tpostfix);
-			PrintInfo(ex);
-			hasil = eval(ex,AngkaNegatif,oke);
-			printf("%.2f\n", hasil);
+			hasil = eval(ex,AngkaNegatif,jumlahN,AngkaPuluhan);
+			printf("%.2f", hasil);
 			getch();
 			system ("cls");
 			main();
