@@ -234,7 +234,6 @@ int main(){
 			    			AngkaPuluhan[k] = atoi(puluhan);
 			    			k++;
 						}
-						
 					}
 				}
 			}
