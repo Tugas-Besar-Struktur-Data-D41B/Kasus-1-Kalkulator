@@ -1,12 +1,79 @@
-/* File     : Main.c 					*/
-/* Desk     : Main program Kalkulator 	*/
-/* Oleh     : -Nabil Putra Hadiyani		*/
-/*			  -Titis Sampurno			*/
-/* Tgl	    : 12 / 07 / 2020	  		*/
-
 #include "bintree.h"
 #include "posttree.h"
+#include<stdio.h>
+#include<math.h>
+#include <conio.h>
+#include <stdlib.h>
 
+void rumus(){
+	printf ("Rumus Penjumlahan dan Pengurangan Trigonometri\n");
+	printf (" Sin(a+b) = Sin a . Cos b + Cos a . Sin b\n");
+	printf (" Sin(a-b) = Sin a . Cos b - Cos a . Sin b\n");
+	printf (" Cos(a+b) = Cos a . Cos b - Sin a . Sin b\n");
+	printf (" Cos(a-b) = Cos a . Cos b + Sin a . Sin b\n");
+	printf (" Tan(a+b) = (Tan a + Tan b)/(1-Tan a Tan b)\n");
+	printf (" Tan(a-b) = (Tan a - Tan b)/(1-Tan a Tan b)\n");
+	printf (" Sin a + Sin b = 2 Sin((a+b)/2) Cos ((a-b)/2)\n");	
+	printf (" Sin a - Sin b = 2 Cos((a+b)/2) Sin ((a-b)/2)\n");
+	printf (" Cos a + Cos b = 2 Cos((a+b)/2) Cos ((a-b)/2)\n");
+	printf (" Cos a - Cos b = -2 Sin((a+b)/2) Sin ((a-b)/2)\n");
+	getch();
+	system("cls");
+}
+
+void input(){
+	int y;
+	printf ("Masukan besar sudut : ");
+	scanf("%d", &y);
+	printf ("SIN %d = %f\n", y, sin(y/57.2958));
+	printf ("COS %d = %f\n", y, cos(y/57.2958));
+	printf ("TAN %d = %f\n", y, sin(y/57.2958)/cos(y/57.2958));
+	getch();
+	system("cls");
+}
+
+void tabeltrigonometri(){
+	int x;
+    printf("		TABEL TRIGONOMETRI\n\n");
+    printf("x	 | SIN(x)	| COS(x)	|TAN(x)	\n");
+    for(x=0; x<=360; x+=15){
+        printf("%d	 | %f	| %f	| %f	\n",x,sin(x/57.2958),cos(x/57.2958), sin(x/57.2958)/cos(x/57.2958));
+    }
+    getch();
+    system("cls");
+}
+
+void menu(){
+	int pilihan;
+	printf("KAMUS TRIGONOMETRI\n");
+	printf("1. TABEL TRIGONOMETERI\n");
+	printf("2. INPUT SUDUT\n");
+	printf("3. RUMUS\n");
+	printf("4. EXIT TRIGONOMETRI\n");
+	printf("Masukan Pilihan: ");
+	scanf("%d", &pilihan);
+	switch(pilihan){
+		case 1: 
+			system("cls");
+			tabeltrigonometri();
+			menu();
+			break;
+		case 2:
+			system("cls");
+			input();
+			menu();		
+			break;
+		case 3:
+			system("cls");
+			rumus();
+			menu();
+			break;
+		case 4:
+			system("cls");
+			main();
+			break;
+	}
+}
 
 BinTree constructTree(char *postfix) { 
 	stacktree st;
@@ -95,6 +162,7 @@ float eval(BinTree P, int arraynegatif[], int size)  {
 	return hasil;
 }  
   
+  
 
 int main(){
 	char negatif[20];
@@ -102,37 +170,59 @@ int main(){
 	char input[50];
     char *tpostfix;
     float hasil;
-    int i, j=0, num;
+    int i, j=0, num, pilihan;
     BinTree ex;
     
-    scanf(" %s",input);
-    tpostfix=Convert(&input);
-    int size=strlen(input);
-    for(i=0; i<size; i++){
-    	if (i==0 && input[0]=='-'){
-    		negatif[j]=input[i+1];
-    		j++;
-		}else if (input[i]=='-'&&input[i-1]=='('){
-			negatif[j]=input[i+1];
-			j++;
-		}
-	}
-	int oke=strlen(negatif);
-    for(i=0; i<oke; i++){
-    	printf ("Negatif %d = %c\n", i+1,negatif[i]);
-	}
-	printf("\n\n%d\n\n",oke);
-	for (i=0;i<oke;i++){
-		AngkaNegatif[i]=toInt(negatif[i]);
-	}
-	printf("%s", tpostfix);
-	printf("\n");
-	printf("\n");
+    printf("KALKULATOR\n");
+    printf("1. KALKULATOR\n");
+    printf("2. KAMUS TRIGONOMETRI\n");
+    printf("3. EXIT\n");
+    printf("Masukan Pilihan: ");
+    scanf("%d", &pilihan);
+    switch (pilihan){
+    	case 1:
+    		system("Cls");
+    		scanf(" %s",input);
+    		tpostfix=Convert(&input);
+    		int size=strlen(input);
+    		for(i=0; i<size; i++){
+    			if (i==0 && input[0]=='-'){
+    				negatif[j]=input[i+1];
+    				j++;
+				}else if (input[i]=='-'&&input[i-1]=='('){
+					negatif[j]=input[i+1];
+					j++;
+				}
+			}
+			int oke=strlen(negatif);
+    		for(i=0; i<oke; i++){
+    			printf ("Negatif %d = %c\n", i+1,negatif[i]);
+			}
+			printf("\n\n%d\n\n",oke);
+			for (i=0;i<oke;i++){
+				AngkaNegatif[i]=toInt(negatif[i]);
+			}
+			printf("%s", tpostfix);
+			printf("\n");
+			printf("\n");
 	
-	ex = constructTree(tpostfix);
-	PrintInfo(ex);
-	hasil = eval(ex,AngkaNegatif,oke);
-	printf("%.2f", hasil);
-	
-	return 0;
+			ex = constructTree(tpostfix);
+			PrintInfo(ex);
+			hasil = eval(ex,AngkaNegatif,oke);
+			printf("%.2f\n", hasil);
+			getch();
+			system ("cls");
+			main();
+			break;
+		
+		case 2:
+			system("cls");
+			menu();
+			break; 
+			
+		case 3:
+			break;
+	}
+    
+    
 }
