@@ -308,10 +308,6 @@ char *Convert(char *infix){
             case '7':
             case '8':
             case '9':
-            	if(i==0 && isOperator(infix[i+1])){
-            		postfix[index]=infix[i];
-	                index++;					
-				}
 				if (isAngka(infix[i-1]) || isAngka(infix[i+1]) ){
             		if(!isOperator(infix[i]) && !puluhan){
 						if(isOperator(infix[i+2]) || i+2==size ){
