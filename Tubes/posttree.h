@@ -11,7 +11,7 @@
 #include "bintree.h"
 
 typedef BinTree infotypetree;
-typedef struct tElmtStack *adrStackTree;
+typedef struct tElmtStackTree *adrStackTree;
 typedef struct tElmtStackTree{
 	infotypetree info;
 	adrStackTree next;
