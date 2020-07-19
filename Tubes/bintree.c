@@ -335,7 +335,6 @@ char *Convert(char *infix){
                 pushStack(&tmp,infix[i]);
                 break;
         }
-        
     }
     while(!isEmpty(tmp)){
             popStack(&tmp,&tmpchar);
