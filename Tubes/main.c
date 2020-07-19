@@ -200,6 +200,7 @@ int main(){
     		scanf(" %s",input);
 		    tpostfix=Convert(&input);
 		    int size=strlen(input);
+		    
 			//cari input puluhan
 			j=0,k=0;
 			for(i=0;i<10;i++){
@@ -220,7 +221,8 @@ int main(){
 				}
 			}
 		
-			//selesai cari input puluhan		    
+			//selesai cari input puluhan
+					    
 			//cari input negatif
 			j=0,k=0;
 		    for(i=0; i<size; i++){
