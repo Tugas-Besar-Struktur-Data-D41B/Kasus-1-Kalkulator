@@ -167,6 +167,10 @@ float eval(BinTree P, int arraynegatif[], int size, int arraypuluhan[])  {
         return left*right;  
         
   	if (Info(P)=='/')
+  		if (right==0){
+  			printf("Infinity (Tidak bisa dibagi dengan nol)\n");
+  			system("exit");
+		}
   		return left/right;
   	
   	for(i=0; i<right; i++){
