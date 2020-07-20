@@ -118,7 +118,7 @@ int toInt(char X){
 	return ((int)X-48);
 }
 
-float eval(BinTree P, int arraynegatif[], int size, int arraypuluhan[])  {
+float eval(BinTree P, int arraynegatif[], int size, int arraypuluhan[], int NegatifPuluhan[])  {
 	int j,i;
 	float hasil=1.0,temp,temp2,puluhan;
 
@@ -126,23 +126,31 @@ float eval(BinTree P, int arraynegatif[], int size, int arraypuluhan[])  {
         return 0;  
     
     if (Left(P)==Nil && Right(P)==Nil){
+    	//Cek puluhan
     	if(Info(P)=='a'){
     		for(j=0;j<size;j++){
 				if(arraypuluhan[j]!=0){
 					puluhan = arraypuluhan[j];
 					arraypuluhan[j] = 0;
+					//Cek puluhan negatif
+					for(i=0;i<size;i++){
+						if(puluhan==NegatifPuluhan[i]){
+							puluhan=puluhan*(-1);
+							NegatifPuluhan[i]=0;
+						}
+					}
 					return puluhan;
 				}
-			}
+			}				//Selesai cek puluhan
 		}else{
 			return toInt(Info(P));
 		}
  	}
           
 	 	
-    float left = eval(Left(P), arraynegatif, size, arraypuluhan);  
-    float right = eval(Right(P), arraynegatif, size, arraypuluhan);  
-	
+    float left = eval(Left(P), arraynegatif, size, arraypuluhan, NegatifPuluhan);  
+    float right = eval(Right(P), arraynegatif, size, arraypuluhan, NegatifPuluhan); 
+	 
 	//Mengubah menjadi negatif
     temp = left;
     temp2 = right;
@@ -169,7 +177,7 @@ float eval(BinTree P, int arraynegatif[], int size, int arraypuluhan[])  {
   	if (Info(P)=='/')
   		if (right==0){
   			printf("Infinity (Tidak bisa dibagi dengan nol)\n");
-  			system("exit");
+			system("exit");
 		}
   		return left/right;
   	
@@ -182,8 +190,8 @@ float eval(BinTree P, int arraynegatif[], int size, int arraypuluhan[])  {
   
 
 int main(){
-	char negatif[20],puluhan[10];
-	int AngkaNegatif[20],AngkaPuluhan[10];
+	char negatif[20],puluhan[10],temp[10];
+	int AngkaNegatif[20],AngkaPuluhan[10],NegatifPuluhan[10];
 	char input[50];
     char *tpostfix;
     float hasil;
@@ -205,37 +213,54 @@ int main(){
 		    tpostfix=Convert(&input);
 		    int size=strlen(input);
 		    
-			//cari input puluhan
-			j=0,k=0;
+		    //cari input puluhan
 			for(i=0;i<10;i++){
 				AngkaPuluhan[i]=0;
+				NegatifPuluhan[i]=0;
 			}
 			for(i=0; i<size; i++){
-				if (isAngka(input[i+1])|| isAngka(input[i-1])){
-			    	if(!isOperator(input[i])){
-			    		puluhan[j]=input[i];
-			    		j++;
-			    		puluhan[j]='\0';
-			    		if(isOperator(input[i+1]) || i+1==size){
-			    			j=0;
-			    			AngkaPuluhan[k] = atoi(puluhan);
-			    			k++;
+				if(!isKurung(input[i])){
+					if (isAngka(input[i+1]) || isAngka(input[i-1])){
+				    	if(!isOperator(input[i])){
+				    		puluhan[j]=input[i];
+				    		j++;
+				    		puluhan[j]='\0';
+				    		if(isOperator(input[i+1]) || i+1==size || isKurung(input[i+1])){
+				    			j=0;
+				    			AngkaPuluhan[k] = atoi(puluhan);
+				    			k++;
+							}
 						}
+					}			
+				}
+			}
+			//Cari input puluhan negatif
+			j=0;k=0;
+			for(i=0; i<size; i++){
+		    	if (isAngka(input[i+1]) || isAngka(input[i-1])){
+		    		temp[j]=input[i+1];
+		    		j++;
+		   			if(isOperator(input[i+2]) || isKurung(input[i+1])){
+		   				j=0;
+		   				NegatifPuluhan[k]=atoi(temp);
+		   				k++;
 					}
 				}
 			}
+			//Selesai cari input puluhan negatif
 		
-			//selesai cari input puluhan
-					    
-			//cari input negatif
-			j=0,k=0;
+			//Selesai cari puluhan
+		    
+		    //cari input negatif
 		    for(i=0; i<size; i++){
-		    	if (i==0 && input[0]=='-'){
-		    		negatif[j]=input[i+1];
-		    		j++;
-				}else if (input[i]=='-'&&input[i-1]=='('){
-					negatif[j]=input[i+1];
-					j++;
+		    	if (isOperator(input[i+2]) || isKurung(input[i+2])){
+			    	if (i==0 && input[0]=='-'){
+				    	negatif[j]=input[i+1];
+			    		j++;
+					}else if (input[i]=='-'&&input[i-1]=='('){
+						negatif[j]=input[i+1];
+						j++;
+					}
 				}
 			}
 			int jumlahN=strlen(negatif);
@@ -249,7 +274,7 @@ int main(){
 			
 
 			ex = constructTree(tpostfix);
-			hasil = eval(ex,AngkaNegatif,jumlahN,AngkaPuluhan);
+			hasil = eval(ex,AngkaNegatif,jumlahN,AngkaPuluhan,NegatifPuluhan);
 			printf("%.2f", hasil);
 			getch();
 			system ("cls");

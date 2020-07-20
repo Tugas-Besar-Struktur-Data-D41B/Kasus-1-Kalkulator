@@ -73,7 +73,12 @@ boolean isOperator(char c)
 	return false; 
 } 
 
-
+boolean isKurung(char c){
+	if (c == '(' || c == ')'){
+		return true;
+	}
+	return false;
+}
 
 
 

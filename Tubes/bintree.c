@@ -308,19 +308,40 @@ char *Convert(char *infix){
             case '7':
             case '8':
             case '9':
-				if (isAngka(infix[i-1]) || isAngka(infix[i+1]) ){
-            		if(!isOperator(infix[i]) && !puluhan){
-						if(isOperator(infix[i+2]) || i+2==size ){
-							puluhan=true;
+            	//Cek Puluhan
+            	if (isKurung(infix[i-2]) && infix[i-1]=='-'){	//Kondisi jika puluhan adalah negatif
+	            	if (isAngka(infix[i-1]) || isAngka(infix[i+1])){
+		           		if(!isOperator(infix[i]) && !puluhan){
+							if(isOperator(infix[i+2]) || i+2==size || isKurung(infix[i+2]) ){
+								puluhan=true;
+							}		
+						}else if(!isOperator(infix[i]) && puluhan){
+							postfix[index]='a';
+							index++;
+							puluhan=false;
+						}else{	
+			
 						}
-					}else if(!isOperator(infix[i]) && puluhan){
-						postfix[index]='a';
-						index++;
-						puluhan=false;
+					}else{
+		                postfix[index]=infix[i];
+		                index++;					
 					}
-				}else{
-	                postfix[index]=infix[i];
-	                index++;					
+				}else{											//Kondisi jika puluhan adalah positif
+	            	if (isAngka(infix[i-1]) || isAngka(infix[i+1])){
+		           		if(!isOperator(infix[i]) && !puluhan){
+							if(isOperator(infix[i+2]) || i+2==size ){
+								puluhan=true;
+							}
+						}else if(!isOperator(infix[i]) && puluhan){
+							postfix[index]='a';
+							index++;
+							puluhan=false;
+						}else{				
+						}
+					}else{
+		                postfix[index]=infix[i];
+		                index++;					
+					}
 				}
                 break;
             case '-':
